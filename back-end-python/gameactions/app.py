@@ -227,9 +227,10 @@ def trivia_calculate_scores(event, _):
         score = int(connection["score"])
         last_question_id = connection["lastQuestionId"] if "lastQuestionId" in connection else ""
         last_answer = connection["lastAnswer"] if "lastAnswer" in connection else ""
+        bonus = question.get("bonus", 0)  # This will default to 0 if no bonus is present
 
         if last_question_id == question["id"] and last_answer == question["answer"]:
-            score += 20
+            score += 20 + bonus # Add 20 points plus any bonus
             TABLE.update_item(
                 Key={"gameId": game_id, "connectionId": connection_id},
                 AttributeUpdates={"score": {'Value': score, "Action": "PUT"}}
